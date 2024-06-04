@@ -24,3 +24,21 @@ describe('get()', function () {
         "JSON: The string '0'" => ['zero', '0'],
     ]);
 });
+
+describe('has()', function () {
+    it(
+        'returns true if the given translation key exists',
+        fn (string $key, bool $expected) => expect($this->translator->has($key))->toBe($expected),
+    )->with([
+        // Sanity check. These should pass.
+        "JSON: Key different than value" => ['one', true],
+        "Regular: Key different than value" => ['mre.one', true],
+        "JSON: Key same as value" => ['same', true],
+
+        /**
+         * Unexpected behavior. These will fail, because:
+         * @see https://github.com/laravel/framework/blob/8154eb6e4b9673f332e2c26daf7730e409d443cc/src/Illuminate/Translation/Translator.php#L129
+         */
+        "Regular: Key same as value" => ['mre.same', true],
+    ]);
+});
